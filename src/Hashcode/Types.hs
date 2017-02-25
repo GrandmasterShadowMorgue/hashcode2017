@@ -3,7 +3,7 @@
 -- Description : Defines the types for our problem domain
 -- Copyright   : (c) Jonatan H Sundqvist and Jayant Shivarajan, 2017
 -- License     : MIT
--- Maintainer  : Jonatan H Sundqvist
+-- Maintainer  : Jonatan H Sundqvist, Jayant Shivarajan
 -- Stability   : experimental
 -- Portability : Portable
 --
@@ -14,7 +14,9 @@
 -- SPEC | -
 --        -
 
--- GHC Directivies -------------------------------------------------------------------------------------------------------------------------
+-- GHC Directives -------------------------------------------------------------------------------------------------------------------------
+
+{-# LANGUAGE DuplicateRecordFields #-}
 
 -- API -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -49,7 +51,7 @@ data Video = Video {
 -- | Represents a network endpoint
 data Endpoint = Endpoint {
   latency :: Milliseconds,
-  caches  :: Map (ID Cache) Millisecond
+  caches  :: Map (ID Cache) Milliseconds
 } deriving (Eq, Show)
 
 
@@ -58,7 +60,11 @@ data Cache = Cache { uuid :: ID Cache } deriving (Eq, Show)
 
 
 -- | Represents a set of requests to the same video from the same endpoint
-data Request = Request { video :: ID Video, endpoint :: ID Endpoint, amount :: Int }
+data Request = Request {
+  video    :: ID Video,
+  endpoint :: ID Endpoint,
+  amount :: Int
+} deriving (Eq, Show)
 
 
 -- | Describes the entire network of endpoints, videos and cache servers
@@ -66,6 +72,9 @@ data Network = Network {
   cacheCapacity :: Megabytes,
   videos    :: Vector Video,
   endpoints :: Vector Endpoint,
-  caches    :: Vector Cache,
   requests  :: Vector Request
-} deriving (Eq, Ord, Show)
+} deriving (Eq, Show)
+
+
+-- | Represents a solution for the cache distribution problem
+data Solution = Solution deriving (Eq, Show)
