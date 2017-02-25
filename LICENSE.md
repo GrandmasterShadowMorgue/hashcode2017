@@ -1,4 +1,5 @@
-Copyright Author name here (c) 2017
+Jayant Shivarajan (c) 2017
+Jonatan Sundqvist (c) 2017
 
 All rights reserved.
 
