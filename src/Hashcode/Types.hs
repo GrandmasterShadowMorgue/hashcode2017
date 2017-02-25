@@ -1,0 +1,1 @@
+module Hashcode.Types where
