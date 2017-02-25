@@ -1,17 +1,71 @@
+-- |
+-- Module      : Hashcode.Types
+-- Description : Defines the types for our problem domain
+-- Copyright   : (c) Jonatan H Sundqvist and Jayant Shivarajan, 2017
+-- License     : MIT
+-- Maintainer  : Jonatan H Sundqvist
+-- Stability   : experimental
+-- Portability : Portable
+--
+
+-- TODO | -
+--        -
+
+-- SPEC | -
+--        -
+
+-- GHC Directivies -------------------------------------------------------------------------------------------------------------------------
+
+-- API -------------------------------------------------------------------------------------------------------------------------------------
+
 module Hashcode.Types where
 
-newtype Megabytes = Megabytes Int
+-- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
-newtype Milliseconds = Milliseconds Int
+import Data.Map    (Map)
+import Data.Vector (Vector)
 
-data ID a = ID { id :: Int }
+-- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
-data Video = Video { size :: Megabytes } deriving (Show, Eq, Ord)
+-- | A typesafe wrapper for storage size
+newtype Megabytes = Megabytes Int deriving (Eq, Ord, Show)
 
-data Endpoint = Endpoint { latencyToDC :: Milliseconds, caches :: Int, cacheLatencies :: HashMap ID Cache Milliseconds}
 
-data Cache = Cache { capacity :: Megabytes} deriving (Show, Eq, Ord)
+-- | A typesafe wrapper for time
+newtype Milliseconds = Milliseconds Int deriving (Eq, Ord, Show)
 
+
+-- | Represents an ID for a value of type `a`
+data ID a = ID { id :: Int } deriving (Eq, Show)
+
+
+-- | Represents a video
+data Video = Video {
+  uuid :: ID Video,
+  size :: Megabytes
+} deriving (Eq, Show)
+
+
+-- | Represents a network endpoint
+data Endpoint = Endpoint {
+  latency :: Milliseconds,
+  caches  :: Map (ID Cache) Millisecond
+} deriving (Eq, Show)
+
+
+-- | Represents a cache server (hmmm....)
+data Cache = Cache { uuid :: ID Cache } deriving (Eq, Show)
+
+
+-- | Represents a set of requests to the same video from the same endpoint
 data Request = Request { video :: ID Video, endpoint :: ID Endpoint, amount :: Int }
 
-data Network = Network {videos :: Vector Video, endpoints :: Vector Endpoint, caches :: Vector Cache, requests :: Vector Request }
+
+-- | Describes the entire network of endpoints, videos and cache servers
+data Network = Network {
+  cacheCapacity :: Megabytes,
+  videos    :: Vector Video,
+  endpoints :: Vector Endpoint,
+  caches    :: Vector Cache,
+  requests  :: Vector Request
+} deriving (Eq, Ord, Show)
