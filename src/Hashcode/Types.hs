@@ -36,7 +36,7 @@ newtype Milliseconds = Milliseconds Int deriving (Eq, Ord, Show)
 
 
 -- | Represents an ID for a value of type `a`
-data ID a = ID { id :: Int } deriving (Eq, Show)
+data ID a = ID { id :: Int } deriving (Eq, Ord, Show)
 
 
 -- | Represents a video
