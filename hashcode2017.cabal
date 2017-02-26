@@ -15,16 +15,21 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
+
   exposed-modules:     Hashcode.Types
                      , Hashcode.Parse
                      , Hashcode.Logic
                      , Hashcode.Serialise
+
   build-depends:       base >= 4.7 && < 5
                      , containers
-                     , attoparsec
-                     , bytestring
-                     , async
                      , vector
+                     , bytestring
+                     , attoparsec
+                     , async
+                     , filepath
+                     , directory
+
   default-language:    Haskell2010
 
 executable hashcode2017

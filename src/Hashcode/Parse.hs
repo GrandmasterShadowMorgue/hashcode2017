@@ -24,4 +24,9 @@ module Hashcode.Parse where
 
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
+import qualified Data.Attoparsec.ByteString.Char8 as Atto
+import qualified Data.ByteString                  as BS
+
+import Hashcode.Types
+
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------

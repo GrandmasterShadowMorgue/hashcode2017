@@ -24,4 +24,11 @@ module Hashcode.Logic where
 
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
+import Data.Map              (Map)
+import qualified Data.Map    as Map
+import           Data.Vector (Vector)
+import qualified Data.Vector as Vec
+
+import Hashcode.Types
+
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------

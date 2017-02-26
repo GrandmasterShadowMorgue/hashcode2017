@@ -38,7 +38,7 @@ newtype Milliseconds = Milliseconds Int deriving (Eq, Ord, Show)
 
 
 -- | Represents an ID for a value of type `a`
-data ID a = ID { id :: Int } deriving (Eq, Ord, Show)
+newtype ID a = ID { unID :: Int } deriving (Eq, Ord, Show)
 
 
 -- | Represents a video
@@ -63,7 +63,7 @@ data Cache = Cache { uuid :: ID Cache } deriving (Eq, Show)
 data Request = Request {
   video    :: ID Video,
   endpoint :: ID Endpoint,
-  amount :: Int
+  amount   :: Int
 } deriving (Eq, Show)
 
 
@@ -71,7 +71,7 @@ data Request = Request {
 data Network = Network {
   cacheCapacity :: Megabytes,
   videos    :: Vector Video,
-  endpoints :: Vector Endpoint,
+  endpoints :: Vector Endpoint, --- TODO: We need to look into this
   requests  :: Vector Request
 } deriving (Eq, Show)
 
