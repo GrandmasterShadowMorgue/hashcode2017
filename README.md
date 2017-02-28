@@ -4,5 +4,5 @@ Hashcode 2017
 
 CONTRIBUTORS
 ------------
-Jayant Shivarajan
-Jonatan Sundqvist
+- Jayant Shivarajan 
+- Jonatan Sundqvist

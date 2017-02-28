@@ -59,11 +59,6 @@ milliseconds = Milliseconds <$> Atto.decimal
 
 
 -- |
-uuid :: Atto.Parser (ID a)
-uuid = ID <$> Atto.decimal
-
-
--- |
 network :: Atto.Parser Network
 network = do
   videoCount    <- Atto.decimal <* Atto.char ' '
@@ -71,7 +66,7 @@ network = do
   requestCount  <- Atto.decimal <* Atto.char ' '
   cacheCount    <- Atto.decimal <* Atto.char ' '
   Network <$>
-    megabytes <*> -- Cache capacity
-    videos    <*> -- Videos
-    endpoints <*> -- Endpoints
-    requests  <*> -- Requests
+    (megabytes <* Atto.char '\n') <*> -- Cache capacity
+    (videos)    <*> -- Videos
+    (endpoints) <*> -- Endpoints
+    (requests)  <*> -- Requests
