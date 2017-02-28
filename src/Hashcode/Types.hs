@@ -25,6 +25,7 @@ module Hashcode.Types where
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
 import Data.Map    (Map)
+import Data.Set    (Set)
 import Data.Vector (Vector)
 
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
@@ -59,6 +60,13 @@ data Endpoint = Endpoint {
 data Cache = Cache { uuid :: ID Cache } deriving (Eq, Show)
 
 
+-- | Describes the content of a particular cache server
+data CacheContents = CacheContents {
+  uuid   :: ID Cache,
+  videos :: Set Video
+} deriving (Eq, Show)
+
+
 -- | Represents a set of requests to the same video from the same endpoint
 data Request = Request {
   video    :: ID Video,
@@ -71,10 +79,12 @@ data Request = Request {
 data Network = Network {
   cacheCapacity :: Megabytes,
   videos    :: Vector Video,
-  endpoints :: Vector Endpoint, --- TODO: We need to look into this
+  endpoints :: Vector Endpoint,
   requests  :: Vector Request
 } deriving (Eq, Show)
 
 
 -- | Represents a solution for the cache distribution problem
-data Solution = Solution deriving (Eq, Show)
+data Solution = Solution {
+  caches :: CacheContents
+} deriving (Eq, Show)

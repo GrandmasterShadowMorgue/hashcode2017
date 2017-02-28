@@ -24,11 +24,21 @@ module Hashcode.Logic where
 
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
+import Data.Set              (Set)
+import qualified Data.Set    as Set
 import Data.Map              (Map)
 import qualified Data.Map    as Map
-import           Data.Vector (Vector)
+import           Data.Vector (Vector, (!?))
 import qualified Data.Vector as Vec
 
 import Hashcode.Types
 
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
+
+-- |
+index :: Vector a -> ID a -> Maybe a
+index v i = v !? (unID i)
+
+
+-- |
+score :: Network -> Solution -> Score
