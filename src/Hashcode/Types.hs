@@ -49,25 +49,25 @@ data Video = Video {
 } deriving (Eq, Show)
 
 
--- | Represents a network endpoint
+-- | Represents a network endpoint.
 data Endpoint = Endpoint {
   latency :: Milliseconds,
   caches  :: Map (ID Cache) Milliseconds
 } deriving (Eq, Show)
 
 
--- | Represents a cache server (hmmm....)
+-- | Represents a cache server (hmmm....).
 data Cache = Cache { uuid :: ID Cache } deriving (Eq, Show)
 
 
--- | Describes the content of a particular cache server
+-- | Describes the content of a particular cache server.
 data CacheContents = CacheContents {
   uuid   :: ID Cache,
   videos :: Set Video
 } deriving (Eq, Show)
 
 
--- | Represents a set of requests to the same video from the same endpoint
+-- | Represents a set of requests to the same video from the same endpoint.
 data Request = Request {
   video    :: ID Video,
   endpoint :: ID Endpoint,
@@ -75,7 +75,7 @@ data Request = Request {
 } deriving (Eq, Show)
 
 
--- | Describes the entire network of endpoints, videos and cache servers
+-- | Describes the entire network of endpoints, videos and cache servers.
 data Network = Network {
   cacheCapacity :: Megabytes,
   videos    :: Vector Video,
@@ -84,7 +84,7 @@ data Network = Network {
 } deriving (Eq, Show)
 
 
--- | Represents a solution for the cache distribution problem
+-- | Represents a solution to the cache distribution problem.
 data Solution = Solution {
   caches :: CacheContents
 } deriving (Eq, Show)

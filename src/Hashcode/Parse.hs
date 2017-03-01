@@ -24,23 +24,25 @@ module Hashcode.Parse where
 
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
+import Data.Vector (Vector)
+
 import Control.Applicative ((<$>), (<*>))
 
 import qualified Data.Attoparsec.ByteString.Char8 as Atto
 import qualified Data.ByteString                  as BS
 
-import Hashcode.Types
+import Hashcode.Types (Video(Video), Endpoint(Endpoint), Request(Request), Megabytes(..), Milliseconds(..), Network(Network))
 
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
 -- |
-video :: Int -> Atto.Parser (Vector Video)
-video n = _
+videos :: Int -> Atto.Parser (Vector Video)
+videos n = _
 
 
 -- |
-endpoint :: Int -> Atto.Parser (Vector Endpoint)
-endpoint n = _
+endpoints :: Int -> Atto.Parser (Vector Endpoint)
+endpoints n = _
 
 
 -- |
@@ -65,8 +67,8 @@ network = do
   endpointCount <- Atto.decimal <* Atto.char ' '
   requestCount  <- Atto.decimal <* Atto.char ' '
   cacheCount    <- Atto.decimal <* Atto.char ' '
-  Network <$>
-    (megabytes <* Atto.char '\n') <*> -- Cache capacity
-    (videos)    <*> -- Videos
-    (endpoints) <*> -- Endpoints
-    (requests)  <*> -- Requests
+  Network
+    <$> (megabytes <* Atto.char '\n') -- Cache capacity
+    <*> (videos videoCount)           -- Videos
+    <*> (endpoints endpointCount)     -- Endpoints
+    <*> (requests cacheCount)         -- Requests

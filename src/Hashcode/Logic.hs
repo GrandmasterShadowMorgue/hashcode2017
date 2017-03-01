@@ -29,7 +29,7 @@ import qualified Data.Set    as Set
 import Data.Map              (Map)
 import qualified Data.Map    as Map
 import           Data.Vector (Vector, (!?))
-import qualified Data.Vector as Vec
+import qualified Data.Vector as Vector
 
 import Hashcode.Types
 
@@ -37,8 +37,14 @@ import Hashcode.Types
 
 -- |
 index :: Vector a -> ID a -> Maybe a
-index v i = v !? (unID i)
+index v i = v !? unID i
 
 
 -- |
 score :: Network -> Solution -> Score
+score network solution = _
+
+
+-- |
+solve :: Network -> Solution
+solve network = _
