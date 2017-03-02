@@ -36,6 +36,7 @@ import Hashcode.Types (Video(Video), Endpoint(Endpoint), Request(Request), ID(..
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
 -- |
+-- TODO | - Demonstrate another cool way (recursive) of writing this parser that doesn't involve prepending the last element
 videos :: Int -> Atto.Parser (Vector Video)
 videos n = do
   prefix <- Atto.count (n-1) (megabytes <* Atto.char ' ')
