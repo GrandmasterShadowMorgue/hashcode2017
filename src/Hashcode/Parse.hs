@@ -25,19 +25,22 @@ module Hashcode.Parse where
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
 import Data.Vector (Vector)
-
+import qualified Data.Vector as Vector
 import Control.Applicative ((<$>), (<*>))
 
 import qualified Data.Attoparsec.ByteString.Char8 as Atto
 import qualified Data.ByteString                  as BS
 
-import Hashcode.Types (Video(Video), Endpoint(Endpoint), Request(Request), Megabytes(..), Milliseconds(..), Network(Network))
+import Hashcode.Types (Video(Video), Endpoint(Endpoint), Request(Request), ID(..), Megabytes(..), Milliseconds(..), Network(Network))
 
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
 -- |
 videos :: Int -> Atto.Parser (Vector Video)
-videos n = _
+videos n = do
+  prefix <- Atto.count (n-1) (megabytes <* Atto.char ' ')
+  suffix <- megabytes <* Atto.char '\n'
+  pure . Vector.fromList $ zipWith (\i mb -> Video (ID i) mb) [0..] (prefix ++ [suffix]){- take each shizzle from da numbuh list as da id arg-}
 
 
 -- |
