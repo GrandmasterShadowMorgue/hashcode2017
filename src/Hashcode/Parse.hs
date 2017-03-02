@@ -45,7 +45,15 @@ videos n = do
 
 -- |
 endpoints :: Int -> Atto.Parser (Vector Endpoint)
-endpoints n = _
+endpoints n = do
+  latencyDC <- milliseconds <* Atto.char ' '
+  cacheAmount <- Atto.decimal <* Atto.char '\n'
+  {-go through the next cacheAmount lines, eadh line containzz da cache id and latency separated by a space-}
+  count cacheAmount cacheParser
+  where cacheParser = do
+      cacheId <- Atto.decimal <* Atto.char ' '
+      cacheLatency <- milliseconds <* Atto.char '\n'
+
 
 
 -- |
