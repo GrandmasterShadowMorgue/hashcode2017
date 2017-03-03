@@ -26,12 +26,12 @@ module Hashcode.Parse where
 
 import Data.Vector (Vector)
 import qualified Data.Vector as Vector
-import Control.Applicative ((<$>), (<*>))
+import Control.Applicative ((<$>), (<*>), liftA2)
 
 import qualified Data.Attoparsec.ByteString.Char8 as Atto
 import qualified Data.ByteString                  as BS
 
-import Hashcode.Types (Video(Video), Endpoint(Endpoint), Request(Request), ID(..), Megabytes(..), Milliseconds(..), Network(Network))
+import Hashcode.Types (Video(Video), Endpoint(Endpoint), Request(Request), ID(ID), Cache(..), Megabytes(..), Milliseconds(..), Network(Network))
 
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
@@ -41,20 +41,35 @@ videos :: Int -> Atto.Parser (Vector Video)
 videos n = do
   prefix <- Atto.count (n-1) (megabytes <* Atto.char ' ')
   suffix <- megabytes <* Atto.char '\n'
-  pure . Vector.fromList $ zipWith (\i mb -> Video (ID i) mb) [0..] (prefix ++ [suffix]){- take each shizzle from da numbuh list as da id arg-}
+  pure . Vector.fromList $ zipWith (\i mb -> Video (ID i) mb) [0..] (prefix ++ [suffix])
+
+
+-- |
+-- TODO | - Rename `collect` (?)
+megadopeVideos :: Int -> Atto.Parser (Vector Video)
+megadopeVideos n = Vector.fromList . sizesToVideos <$> collect n
+  where
+    sizesToVideos :: [Megabytes] -> [Video]
+    sizesToVideos = zipWith (Video . ID) [0..]
+
+    collect :: Int -> Atto.Parser [Megabytes]
+    collect 0 = pure []
+    collect 1 = liftA2 (:) (megabytes)                  (collect $ 0)
+    collect m = liftA2 (:) (megabytes <* Atto.char ' ') (collect $ m-1)
 
 
 -- |
 endpoints :: Int -> Atto.Parser (Vector Endpoint)
-endpoints n = do
-  latencyDC <- milliseconds <* Atto.char ' '
-  cacheAmount <- Atto.decimal <* Atto.char '\n'
-  {-go through the next cacheAmount lines, eadh line containzz da cache id and latency separated by a space-}
-  count cacheAmount cacheParser
-  where cacheParser = do
-      cacheId <- Atto.decimal <* Atto.char ' '
-      cacheLatency <- milliseconds <* Atto.char '\n'
+endpoints n = _
+  where
+    cache :: Atto.Parser (ID Cache, Milliseconds)
+    cache    = (,) <$> (identifier <* Atto.char ' ') <*> (milliseconds <* Atto.char '\n')
 
+    endpoint :: Atto.Parser Endpoint
+    endpoint = do
+      latency <- milliseconds <* Atto.char ' '
+      nCaches <- Atto.decimal <* Atto.char '\n'
+      Atto.count nCaches cache
 
 
 -- |
@@ -70,6 +85,11 @@ megabytes = Megabytes <$> Atto.decimal
 -- |
 milliseconds :: Atto.Parser Milliseconds
 milliseconds = Milliseconds <$> Atto.decimal
+
+
+-- |
+identifier :: Atto.Parser (ID a)
+identifier = ID <$> Atto.decimal
 
 
 -- |
