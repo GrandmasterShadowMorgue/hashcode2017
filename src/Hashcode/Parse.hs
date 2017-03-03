@@ -36,7 +36,7 @@ import Hashcode.Types (Video(Video), Endpoint(Endpoint), Request(Request), ID(ID
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
 -- |
--- TODO | - Demonstrate another cool way (recursive) of writing this parser that doesn't involve prepending the last element
+-- TODO | - Demonstrate another cool way (recursive) of writing this parser that doesn't involve appending the last element
 videos :: Int -> Atto.Parser (Vector Video)
 videos n = do
   prefix <- Atto.count (n-1) (megabytes <* Atto.char ' ')
@@ -54,7 +54,7 @@ megadopeVideos n = Vector.fromList . sizesToVideos <$> collect n
 
     collect :: Int -> Atto.Parser [Megabytes]
     collect 0 = pure []
-    collect 1 = liftA2 (:) (megabytes)                  (collect $ 0)
+    collect 1 = liftA2 (:) <$> (megabytes)              (collect $ 0)
     collect m = liftA2 (:) (megabytes <* Atto.char ' ') (collect $ m-1)
 
 
