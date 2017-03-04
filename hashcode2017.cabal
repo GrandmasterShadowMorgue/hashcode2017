@@ -10,7 +10,7 @@ maintainer:          jonatanhsundqvist@gmail.com
 copyright:           2017 Shivarajan, 2017 Sundqvist
 category:            Math
 build-type:          Simple
-extra-source-files:  README.md
+extra-source-files:  README.md0
 cabal-version:       >=1.10
 
 library
@@ -20,6 +20,7 @@ library
                      , Hashcode.Parse
                      , Hashcode.Logic
                      , Hashcode.Serialise
+                     , Hashcode.App
 
   build-depends:       base >= 4.7 && < 5
                      , containers

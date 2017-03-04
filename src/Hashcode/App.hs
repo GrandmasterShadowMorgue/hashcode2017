@@ -1,6 +1,6 @@
 -- |
--- Module      : Hashcode.Logic
--- Description : Defines serialisation logic for the output `Solution` type
+-- Module      : Hashcode.App
+-- Description : Ties all the knots together
 -- Copyright   : (c) Jonatan H Sundqvist and Jayant Shivarajan, 2017
 -- License     : MIT
 -- Maintainer  : Jonatan H Sundqvist
@@ -13,23 +13,29 @@
 
 -- SPEC | -
 --        -
+
 -- GHC Directives -------------------------------------------------------------------------------------------------------------------------
 
 {-# LANGUAGE DuplicateRecordFields #-}
 
 -- API -------------------------------------------------------------------------------------------------------------------------------------
 
-module Hashcode.Serialise where
+module Hashcode.App where
 
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
-import qualified Data.ByteString as BS
-import           Data.ByteString (ByteString)
+import Control.Exception
+
+import System.FilePath
+import System.Directory
 
 import Hashcode.Types
+import Hashcode.Parse
+import Hashcode.Logic
+import Hashcode.Serialise
 
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
--- |
-serialise :: Solution -> ByteString
-serialise = _
+app :: IO ()
+app = do
+  return ()
