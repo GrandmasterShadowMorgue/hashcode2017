@@ -10,7 +10,7 @@ maintainer:          jonatanhsundqvist@gmail.com
 copyright:           2017 Shivarajan, 2017 Sundqvist
 category:            Math
 build-type:          Simple
-extra-source-files:  README.md0
+extra-source-files:  README.md
 cabal-version:       >=1.10
 
 library

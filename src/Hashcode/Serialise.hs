@@ -31,5 +31,5 @@ import Hashcode.Types
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
 -- |
-serialise :: Solution -> ByteString
-serialise = _
+-- serialise :: Solution -> ByteString
+-- serialise = _
