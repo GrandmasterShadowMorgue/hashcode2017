@@ -48,20 +48,6 @@ videos n = Vector.fromList . sizesToVideos <$> liftA2 (:) megabytes (remaining <
 
 
 -- |
--- TODO | - Rename `collect` (?)
-megadopeVideos :: Int -> Atto.Parser (Vector Video)
-megadopeVideos n = Vector.fromList . sizesToVideos <$> collect n
-  where
-    sizesToVideos :: [Megabytes] -> [Video]
-    sizesToVideos = zipWith (Video . ID) [0..]
-
-    collect :: Int -> Atto.Parser [Megabytes]
-    collect 0 = pure []
-    collect 1 = liftA2 (:) (megabytes)                  (collect $ 0)
-    collect m = liftA2 (:) (megabytes <* Atto.char ' ') (collect $ m-1)
-
-
--- |
 endpoints :: Int -> Atto.Parser (Vector Endpoint)
 endpoints n = _
   where
