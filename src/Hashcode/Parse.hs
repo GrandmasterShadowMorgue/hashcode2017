@@ -59,7 +59,7 @@ endpoints n = Vector.fromList <$> Atto.count n endpoint
     endpoint = do
       latency <- milliseconds <* Atto.char ' '
       nCaches <- Atto.decimal <* Atto.char '\n'
-      Endpoint latency <$> (Map.fromList <$> (Atto.count nCaches cache))
+      Endpoint latency . Map.fromList <$> Atto.count nCaches cache
 
 
 -- |
