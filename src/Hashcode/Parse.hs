@@ -25,6 +25,7 @@ module Hashcode.Parse where
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
 import Data.Vector (Vector)
+import qualified Data.Map as Map
 import qualified Data.Vector as Vector
 import Control.Applicative ((<$>), (<*>), liftA2)
 
@@ -49,7 +50,7 @@ videos n = Vector.fromList . sizesToVideos <$> liftA2 (:) megabytes (remaining <
 
 -- |
 endpoints :: Int -> Atto.Parser (Vector Endpoint)
-endpoints n = _
+endpoints n = Vector.fromList <$> Atto.count n endpoint
   where
     cache :: Atto.Parser (ID Cache, Milliseconds)
     cache    = (,) <$> (identifier <* Atto.char ' ') <*> (milliseconds <* Atto.char '\n')
@@ -58,7 +59,7 @@ endpoints n = _
     endpoint = do
       latency <- milliseconds <* Atto.char ' '
       nCaches <- Atto.decimal <* Atto.char '\n'
-      Atto.count nCaches cache
+      Endpoint latency <$> (Map.fromList <$> (Atto.count nCaches cache))
 
 
 -- |
