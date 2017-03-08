@@ -36,12 +36,12 @@ import Hashcode.Types (Video(Video), Endpoint(Endpoint), Request(Request), ID(ID
 
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
--- |
-fromBytestring :: BS.ByteString -> Atto.Result Network
-fromBytestring = Atto.parse network
+-- | Applies the network parser to a `ByteString`. Saves us from having to import Attoparsec along with this module.
+fromBytestring :: BS.ByteString -> Either String Network
+fromBytestring = Atto.eitherResult . Atto.parse network
 
 
--- |
+-- | Parses `n` video definitions. Negative counts are treated as though `n` were zero.
 -- TODO | - Demonstrate another cool way (recursive) of writing this parser that doesn't involve appending the last element (✓)
 videos :: Int -> Atto.Parser (Vector Video)
 videos 0 = pure Vector.empty
@@ -54,7 +54,7 @@ videos n = Vector.fromList . sizesToVideos <$> liftA2 (:) megabytes (remaining <
     remaining = Atto.count (n-1) (Atto.char ' ' *> megabytes)
 
 
--- |
+-- | Parses `n` endpoint definitions. Negative counts are treated as though `n` were zero.
 endpoints :: Int -> Atto.Parser (Vector Endpoint)
 endpoints n = Vector.fromList <$> Atto.count n endpoint
   where
@@ -69,34 +69,34 @@ endpoints n = Vector.fromList <$> Atto.count n endpoint
 
 
 -- |
--- requests :: Int -> Atto.Parser (Vector Request)
--- requests n = _
+requests :: Int -> Atto.Parser (Vector Request)
+requests n = error "Work In Progress | Please Stand Back"
 
 
--- |
+-- | Parses an unsigned decimal number, treating it as a Megabytes value.
 megabytes :: Atto.Parser Megabytes
 megabytes = Megabytes <$> Atto.decimal
 
 
--- |
+-- | Parses an unsigned decimal number, treating it as a Milliseconds value
 milliseconds :: Atto.Parser Milliseconds
 milliseconds = Milliseconds <$> Atto.decimal
 
 
--- |
+-- | -- | Parses an unsigned decimal number, treating it as an Identifier value
 identifier :: Atto.Parser (ID a)
 identifier = ID <$> Atto.decimal
 
 
 -- |
--- network :: Atto.Parser Network
--- network = do
---   videoCount    <- Atto.decimal <* Atto.char ' '
---   endpointCount <- Atto.decimal <* Atto.char ' '
---   requestCount  <- Atto.decimal <* Atto.char ' '
---   cacheCount    <- Atto.decimal <* Atto.char ' '
---   Network
---     <$> (megabytes <* Atto.char '\n') -- Cache capacity
---     <*> (videos videoCount)           -- Videos
---     <*> (endpoints endpointCount)     -- Endpoints
---     <*> (requests cacheCount)         -- Requests
+network :: Atto.Parser Network
+network = do
+  videoCount    <- Atto.decimal <* Atto.char ' '
+  endpointCount <- Atto.decimal <* Atto.char ' '
+  requestCount  <- Atto.decimal <* Atto.char ' '
+  cacheCount    <- Atto.decimal <* Atto.char ' '
+  Network
+    <$> (megabytes <* Atto.char '\n')            -- Cache capacity
+    <*> (videos videoCount)                      -- Videos
+    <*> (endpoints endpointCount)                -- Endpoints
+    <*> (requests cacheCount <* Atto.endOfInput) -- Requests
