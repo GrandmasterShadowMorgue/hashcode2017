@@ -20,7 +20,7 @@
 
 -- API -------------------------------------------------------------------------------------------------------------------------------------
 
-module Hashcode.Parse where
+module Hashcode.Parse (fromBytestring, network) where
 
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
@@ -37,8 +37,14 @@ import Hashcode.Types (Video(Video), Endpoint(Endpoint), Request(Request), ID(ID
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
 -- |
--- TODO | - Demonstrate another cool way (recursive) of writing this parser that doesn't involve appending the last element
+fromBytestring :: BS.ByteString -> Atto.Result Network
+fromBytestring = Atto.parse network
+
+
+-- |
+-- TODO | - Demonstrate another cool way (recursive) of writing this parser that doesn't involve appending the last element (✓)
 videos :: Int -> Atto.Parser (Vector Video)
+videos 0 = pure Vector.empty
 videos n = Vector.fromList . sizesToVideos <$> liftA2 (:) megabytes (remaining <* Atto.char '\n')
   where
     sizesToVideos :: [Megabytes] -> [Video]
@@ -63,8 +69,8 @@ endpoints n = Vector.fromList <$> Atto.count n endpoint
 
 
 -- |
-requests :: Int -> Atto.Parser (Vector Request)
-requests n = _
+-- requests :: Int -> Atto.Parser (Vector Request)
+-- requests n = _
 
 
 -- |
@@ -83,14 +89,14 @@ identifier = ID <$> Atto.decimal
 
 
 -- |
-network :: Atto.Parser Network
-network = do
-  videoCount    <- Atto.decimal <* Atto.char ' '
-  endpointCount <- Atto.decimal <* Atto.char ' '
-  requestCount  <- Atto.decimal <* Atto.char ' '
-  cacheCount    <- Atto.decimal <* Atto.char ' '
-  Network
-    <$> (megabytes <* Atto.char '\n') -- Cache capacity
-    <*> (videos videoCount)           -- Videos
-    <*> (endpoints endpointCount)     -- Endpoints
-    <*> (requests cacheCount)         -- Requests
+-- network :: Atto.Parser Network
+-- network = do
+--   videoCount    <- Atto.decimal <* Atto.char ' '
+--   endpointCount <- Atto.decimal <* Atto.char ' '
+--   requestCount  <- Atto.decimal <* Atto.char ' '
+--   cacheCount    <- Atto.decimal <* Atto.char ' '
+--   Network
+--     <$> (megabytes <* Atto.char '\n') -- Cache capacity
+--     <*> (videos videoCount)           -- Videos
+--     <*> (endpoints endpointCount)     -- Endpoints
+--     <*> (requests cacheCount)         -- Requests

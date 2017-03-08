@@ -42,6 +42,10 @@ newtype Milliseconds = Milliseconds Int deriving (Eq, Ord, Show)
 newtype ID a = ID { unID :: Int } deriving (Eq, Ord, Show)
 
 
+-- | Represents a `Solution` score
+newtype Score = Score Int deriving (Eq, Ord, Show)
+
+
 -- | Represents a video
 data Video = Video {
   uuid :: ID Video,

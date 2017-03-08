@@ -41,10 +41,10 @@ index v i = v !? unID i
 
 
 -- |
-score :: Network -> Solution -> Score
-score network solution = _
+-- score :: Network -> Solution -> Score
+-- score network solution = _
 
 
 -- |
-solve :: Network -> Solution
-solve network = _
+-- solve :: Network -> Solution
+-- solve network = _
