@@ -78,17 +78,17 @@ megabytes :: Atto.Parser Megabytes
 megabytes = Megabytes <$> Atto.decimal
 
 
--- | Parses an unsigned decimal number, treating it as a Milliseconds value
+-- | Parses an unsigned decimal number, treating it as a Milliseconds value.
 milliseconds :: Atto.Parser Milliseconds
 milliseconds = Milliseconds <$> Atto.decimal
 
 
--- | -- | Parses an unsigned decimal number, treating it as an Identifier value
+-- | Parses an unsigned decimal number, treating it as an Identifier value.
 identifier :: Atto.Parser (ID a)
 identifier = ID <$> Atto.decimal
 
 
--- |
+-- | Parses a `Network` definition.
 network :: Atto.Parser Network
 network = do
   videoCount    <- Atto.decimal <* Atto.char ' '

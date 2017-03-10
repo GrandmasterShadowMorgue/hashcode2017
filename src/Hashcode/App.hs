@@ -34,9 +34,10 @@ import Data.FileEmbed (makeRelativeToProject, strToExp)
 
 import Text.Printf (printf)
 
-import Control.Exception
+import           Control.Exception
+import qualified Control.Concurrent.Async as Async
 
-import System.FilePath  (takeExtension, normalise, (</>))
+import System.FilePath  (takeExtension, takeBaseName, normalise, (</>))
 import System.Directory (getDirectoryContents)
 
 import Hashcode.Types
@@ -51,22 +52,16 @@ enumerateDatasets :: FilePath -> IO (Either String [FilePath])
 enumerateDatasets folder = second (map robustPath . prune) <$> catch everyPath explain
   where
     prune :: [FilePath] -> [FilePath]
-    prune = filter (hasExtension ".in")
+    prune = filter ((== ".in") . takeExtension)
 
     robustPath :: FilePath -> FilePath
-    robustPath path = normalise $ makeAbsolute folder </> path
-
-    hasExtension :: FilePath -> FilePath -> Bool
-    hasExtension ext = (== ext) . takeExtension
-
-    makeAbsolute :: FilePath -> FilePath
-    makeAbsolute fn  = $(makeRelativeToProject "." >>= strToExp) </> fn
+    robustPath fn  = normalise $ $(makeRelativeToProject "." >>= strToExp) </> fn
 
     explain :: SomeException -> IO (Either String [FilePath])
     explain e = return . Left $ show (folder, e)
 
     everyPath :: IO (Either String [FilePath])
-    everyPath = Right <$> (getDirectoryContents $ makeAbsolute folder)
+    everyPath = Right <$> (getDirectoryContents $ robustPath folder)
 
 
 -- |
@@ -82,7 +77,7 @@ loadDataset fn = catch load explain
 loadDatasetsFrom :: FilePath -> IO (Either String [Either String Network])
 loadDatasetsFrom fn = do
   epaths <- enumerateDatasets fn
-  either (return . Left) (fmap Right . mapM loadDataset) epaths
+  either (return . Left) (fmap Right . Async.mapConcurrently loadDataset) (epaths)
 
 
 -- |
@@ -92,6 +87,6 @@ app = flip catch (\e -> print (e :: SomeException)) $ do
   mapM print datasets
   either
     (\_ -> putStrLn "Sorry")
-    (mapM_ (\fn -> BS.readFile fn >>= \s -> putStrLn $ printf "%s has %d lines." fn (BS.count '\n' s)))
+    (mapM_ (\fn -> BS.readFile fn >>= \s -> putStrLn $ printf "%s has %d lines." (takeBaseName fn) (BS.count '\n' s)))
     (datasets)
   return ()
