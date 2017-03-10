@@ -81,6 +81,7 @@ data Request = Request {
 
 -- | Describes the entire network of endpoints, videos and cache servers.
 data Network = Network {
+  cacheCount    :: Int,
   cacheCapacity :: Megabytes,
   videos    :: Vector Video,
   endpoints :: Vector Endpoint,
