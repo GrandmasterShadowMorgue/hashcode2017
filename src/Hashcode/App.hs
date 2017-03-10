@@ -89,4 +89,5 @@ app = flip catch (\e -> print (e :: SomeException)) $ do
     (const $ putStrLn "Sorry")
     (mapM_ (\fn -> BS.readFile fn >>= \s -> putStrLn $ printf "%s has %d lines." (takeBaseName fn) (BS.count '\n' s)))
     (datasets)
+  loadDatasetsFrom "data/input/"
   return ()
