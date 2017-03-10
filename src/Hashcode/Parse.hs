@@ -40,7 +40,6 @@ import Hashcode.Types (Video(Video), Endpoint(Endpoint), Request(Request), ID(ID
 fromBytestring :: BS.ByteString -> Either String Network
 fromBytestring = Atto.eitherResult . Atto.parse network
 
-
 -- | Parses `n` video definitions. Negative counts are treated as though `n` were zero.
 -- TODO | - Demonstrate another cool way (recursive) of writing this parser that doesn't involve appending the last element (✓)
 videos :: Int -> Atto.Parser (Vector Video)
@@ -67,10 +66,15 @@ endpoints n = Vector.fromList <$> Atto.count n endpoint
       nCaches <- Atto.decimal <* Atto.char '\n'
       Endpoint latency . Map.fromList <$> Atto.count nCaches cache
 
-
 -- |
 requests :: Int -> Atto.Parser (Vector Request)
-requests n = error "Work In Progress | Please Stand Back"
+requests n = Vector.fromList <$> Atto.count n request
+  where
+    request::Atto.Parser Request
+    request = Request
+      <$> (identifier <* Atto.char ' ')
+      <*> (identifier <* Atto.char ' ')
+      <*> (Atto.decimal <* Atto.char '\n')
 
 
 -- | Parses an unsigned decimal number, treating it as a Megabytes value.
