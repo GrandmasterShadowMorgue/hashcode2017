@@ -71,11 +71,10 @@ requests :: Int -> Atto.Parser (Vector Request)
 requests n = Vector.fromList <$> Atto.count n request
   where
     request::Atto.Parser Request
-    request = do
-      videoID <- identifier <* Atto.char ' '
-      sourceID  <- identifier <* Atto.char ' '
-      amount <- Atto.decimal <* Atto.char '\n'
-      return $ Request videoID sourceID amount
+    request = Request
+      <$> (identifier <* Atto.char ' ')
+      <*> (identifier <* Atto.char ' ')
+      <*> (Atto.decimal <* Atto.char '\n')
 
 
 -- | Parses an unsigned decimal number, treating it as a Megabytes value.

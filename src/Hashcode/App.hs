@@ -61,7 +61,7 @@ enumerateDatasets folder = second (map robustPath . prune) <$> catch everyPath e
     explain e = return . Left $ show (folder, e)
 
     everyPath :: IO (Either String [FilePath])
-    everyPath = Right <$> (getDirectoryContents0 $ robustPath folder)
+    everyPath = Right <$> (getDirectoryContents $ robustPath folder)
 
 
 -- |
