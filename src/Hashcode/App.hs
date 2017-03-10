@@ -49,7 +49,7 @@ import Hashcode.Serialise
 
 -- | Lists the paths of all datasets in the given folder.
 enumerateDatasets :: FilePath -> IO (Either String [FilePath])
-enumerateDatasets folder = second (map robustPath . prune) <$> catch everyPath explain
+enumerateDatasets folder = second (map (\p -> robustPath $ folder </> p) . prune) <$> catch everyPath explain
   where
     prune :: [FilePath] -> [FilePath]
     prune = filter ((== ".in") . takeExtension)
@@ -61,7 +61,7 @@ enumerateDatasets folder = second (map robustPath . prune) <$> catch everyPath e
     explain e = return . Left $ show (folder, e)
 
     everyPath :: IO (Either String [FilePath])
-    everyPath = Right <$> (getDirectoryContents $ robustPath folder)
+    everyPath = Right <$> getDirectoryContents (robustPath folder)
 
 
 -- |
@@ -89,4 +89,5 @@ app = flip catch (\e -> print (e :: SomeException)) $ do
     (const $ putStrLn "Sorry")
     (mapM_ (\fn -> BS.readFile fn >>= \s -> putStrLn $ printf "%s has %d lines." (takeBaseName fn) (BS.count '\n' s)))
     (datasets)
+  loadDatasetsFrom "data/input/"
   return ()
