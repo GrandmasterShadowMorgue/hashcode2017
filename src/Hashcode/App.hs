@@ -61,7 +61,7 @@ enumerateDatasets folder = second (map robustPath . prune) <$> catch everyPath e
     explain e = return . Left $ show (folder, e)
 
     everyPath :: IO (Either String [FilePath])
-    everyPath = Right <$> (getDirectoryContents $ robustPath folder)
+    everyPath = Right <$> (getDirectoryContents0 $ robustPath folder)
 
 
 -- |
@@ -77,7 +77,7 @@ loadDataset fn = catch load explain
 loadDatasetsFrom :: FilePath -> IO (Either String [Either String Network])
 loadDatasetsFrom fn = do
   epaths <- enumerateDatasets fn
-  either (return . Left) (fmap Right . Async.mapConcurrently loadDataset) (epaths)
+  either (return . Left) (fmap Right . Async.mapConcurrently loadDataset) epaths
 
 
 -- |
@@ -86,7 +86,7 @@ app = flip catch (\e -> print (e :: SomeException)) $ do
   datasets <- enumerateDatasets "data/input/"
   mapM print datasets
   either
-    (\_ -> putStrLn "Sorry")
+    (const $ putStrLn "Sorry")
     (mapM_ (\fn -> BS.readFile fn >>= \s -> putStrLn $ printf "%s has %d lines." (takeBaseName fn) (BS.count '\n' s)))
     (datasets)
   return ()
