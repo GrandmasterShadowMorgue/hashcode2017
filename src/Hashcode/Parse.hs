@@ -25,8 +25,8 @@ module Hashcode.Parse (fromBytestring, network) where
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
 import Data.Vector (Vector)
-import qualified Data.Map as Map
-import qualified Data.Vector as Vector
+import qualified Data.Map.Strict as Map
+import qualified Data.Vector     as Vector
 import Control.Applicative ((<$>), (<*>), liftA2)
 
 import qualified Data.Attoparsec.ByteString.Char8 as Atto

@@ -30,7 +30,8 @@ import qualified Data.ByteString.Char8 as BS
 import           Data.ByteString (ByteString)
 import           Data.Bifunctor  (first, second)
 
-import Data.FileEmbed (makeRelativeToProject, strToExp)
+import           Data.FileEmbed (makeRelativeToProject, strToExp)
+import qualified Data.Time.Clock as Clock
 
 import Text.Printf (printf)
 
@@ -90,10 +91,12 @@ app = flip catch (\e -> print (e :: SomeException)) $ do
     (mapM_ (\fn -> BS.readFile fn >>= \s -> putStrLn $ printf "%s has %d lines." (takeBaseName fn) (BS.count '\n' s)))
     (datasets)
 
+  t <- Clock.getCurrentTime
   datasets <- loadDatasetsFrom "data/input/"
   either
     (\e -> putStrLn $ "Something went wrong: " ++ e)
     (mapM_ $ putStrLn . take 140 . show)
     (datasets)
-
+  t' <- Clock.getCurrentTime
+  print $ Clock.diffUTCTime t' t
   return ()
