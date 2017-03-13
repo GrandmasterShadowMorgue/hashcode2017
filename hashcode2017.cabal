@@ -26,6 +26,7 @@ library
                      , containers
                      , vector
                      , bytestring
+                     , time
                      , attoparsec
                      , async
                      , filepath
