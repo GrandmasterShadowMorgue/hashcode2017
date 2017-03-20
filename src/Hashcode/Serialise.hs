@@ -23,6 +23,8 @@ module Hashcode.Serialise where
 
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
+import qualified Prelude
+
 import qualified Data.ByteString as BS
 import           Data.ByteString (ByteString)
 

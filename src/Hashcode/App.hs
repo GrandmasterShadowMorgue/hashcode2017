@@ -50,7 +50,7 @@ import Hashcode.Serialise
 
 -- | Lists the paths of all datasets in the given folder.
 enumerateDatasets :: FilePath -> IO (Either String [FilePath])
-enumerateDatasets folder = second (map (\p -> robustPath $ folder </> p) . prune) <$> catch everyPath explain
+enumerateDatasets folder = second (map (robustPath . (folder </>)) . prune) <$> catch everyPath explain
   where
     prune :: [FilePath] -> [FilePath]
     prune = filter ((== ".in") . takeExtension)
