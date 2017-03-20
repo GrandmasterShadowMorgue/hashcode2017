@@ -23,13 +23,24 @@ module Hashcode.Serialise where
 
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
-import qualified Data.ByteString as BS
+import qualified Data.ByteString.Char8 as BS
 import           Data.ByteString (ByteString)
+import qualified Data.Set as Set
+import           Data.Foldable (toList)
 
 import Hashcode.Types
 
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
 -- |
--- serialise :: Solution -> ByteString
--- serialise = _
+serialise :: Solution -> ByteString
+serialise solution = BS.pack . unlines $ cacheCount : cacheServers
+  where
+    cacheCount :: String
+    cacheCount   = show . length $ caches (solution :: Solution)
+
+    cacheServers :: [String]
+    cacheServers = map showCache (toList $ caches (solution :: Solution))
+
+    showCache :: CacheContents -> String
+    showCache c  = unwords $ (show . unID $ uuid (c :: CacheContents)) : map (show . unID . uuid) (Set.elems $ videos (c :: CacheContents))
