@@ -42,6 +42,18 @@ newtype Milliseconds = Milliseconds Int deriving (Eq, Ord, Show)
 newtype ID a = ID { unID :: Int } deriving (Eq, Ord, Show)
 
 
+-- | Represents a cache server (hmmm....).
+newtype Cache = Cache { uuid :: ID Cache } deriving (Eq, Show)
+
+
+-- | Describes the content of a particular cache server.
+newtype CacheContents = CacheContents { videos :: Set (ID Video) } deriving (Eq, Show)
+
+
+-- | Represents a solution to the cache distribution problem.
+newtype Solution = Solution { caches:: Map (ID Cache) CacheContents } deriving (Eq, Show)
+
+
 -- | Represents a `Solution` score
 newtype Score = Score Int deriving (Eq, Ord, Show)
 
@@ -60,17 +72,6 @@ data Endpoint = Endpoint {
 } deriving (Eq, Show)
 
 
--- | Represents a cache server (hmmm....).
-data Cache = Cache { uuid :: ID Cache } deriving (Eq, Show)
-
-
--- | Describes the content of a particular cache server.
-data CacheContents = CacheContents {
-  uuid   :: ID Cache,
-  videos :: Set Video
-} deriving (Eq, Show)
-
-
 -- | Represents a set of requests to the same video from the same endpoint.
 data Request = Request {
   video    :: ID Video,
@@ -86,10 +87,4 @@ data Network = Network {
   videos    :: Vector Video,
   endpoints :: Vector Endpoint,
   requests  :: Vector Request
-} deriving (Eq, Show)
-
-
--- | Represents a solution to the cache distribution problem.
-data Solution = Solution {
-  caches :: CacheContents
 } deriving (Eq, Show)

@@ -24,23 +24,35 @@ module Hashcode.Serialise where
 -- We'll need these ------------------------------------------------------------------------------------------------------------------------
 
 import           Data.Foldable   (toList)
-import qualified Data.ByteString as BS
+import qualified Data.ByteString.Char8 as BS
 import           Data.ByteString (ByteString)
+import qualified Data.Map        as Map
 import qualified Data.Set        as Set
 
 import Hashcode.Types
 
 -- Definitions -----------------------------------------------------------------------------------------------------------------------------
 
+-- | Example solution for testing
+dummySolution :: Solution
+dummySolution = Solution . Map.fromList $ map makeCacheContents cacheDescriptions
+  where
+    makeCacheContents (icache, ivideos) = (ID icache, CacheContents . Set.fromList $ map ID ivideos)
+    cacheDescriptions = [(0, [0,2,5,3,8]),
+                         (3, [6,2,1]),
+                         (6, [2,1,3]),
+                         (2, [1,9])]
+
+
 -- |
 serialise :: Solution -> ByteString
-serialise solution = BS.pack . unlines $ cacheCount : cacheServers
+serialise solution = BS.pack . unlines $ showCacheCount : showCacheServers
   where
-    cacheCount :: String
-    cacheCount   = show . length $ caches (solution :: Solution)
+    showCacheCount :: String
+    showCacheCount = show . length $ caches (solution :: Solution)
 
-    cacheServers :: [String]
-    cacheServers = map showCache (toList $ caches (solution :: Solution))
+    showCacheServers :: [String]
+    showCacheServers = map (uncurry showCacheServer) . Map.toList $ caches (solution :: Solution)
 
-    showCache :: CacheContents -> String
-    showCache c  = unwords $ (show . unID $ uuid (c :: CacheContents)) : map (show . unID . uuid) (Set.elems $ videos (c :: CacheContents))
+    showCacheServer :: (ID Cache) -> CacheContents -> String
+    showCacheServer i c = unwords . map show $ unID i : map unID (Set.elems $ videos (c :: CacheContents))
